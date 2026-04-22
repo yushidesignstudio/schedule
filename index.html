@@ -3,222 +3,299 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>工作排程 2026</title>
+<title>工作排程</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #F5F3EE; --surface: #FFFFFF; --surface2: #EDEBE5;
-  --border: #D8D4CC; --border2: #C4BFB4;
-  --text: #1A1816; --text2: #6B665E; --text3: #9E988E;
-  --w1: #2B5BA8; --w1-light: #EBF0FA; --w1-mid: #7FA3D8;
-  --w2: #1B7A52; --w2-light: #E6F5EE; --w2-mid: #6BB894;
-  --accent: #C8410A;
-  --key: #FFF3CD; --key-border: #E8C840; --key-text: #7A5800;
-  --radius: 6px; --radius-lg: 10px;
+  --bg:#F5F3EE; --surface:#FFFFFF; --surface2:#EDEBE5;
+  --border:#D8D4CC; --border2:#C4BFB4;
+  --text:#1A1816; --text2:#6B665E; --text3:#9E988E;
+  --w1:#2B5BA8; --w1-light:#EBF0FA; --w1-mid:#7FA3D8;
+  --w2:#1B7A52; --w2-light:#E6F5EE; --w2-mid:#6BB894;
+  --accent:#C8410A;
+  --key:#FFF3CD; --key-border:#E8C840; --key-text:#7A5800;
+  --r:6px; --rl:10px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 13px; line-height: 1.5; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:13px;line-height:1.5;}
 
-/* Header */
-.header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 20px; display: flex; align-items: center; gap: 14px; height: 52px; position: sticky; top: 0; z-index: 50; }
-.header-logo { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; letter-spacing: .08em; color: var(--text2); white-space: nowrap; }
-.header-spacer { flex: 1; }
-.save-indicator { font-size: 11px; color: var(--text3); display: flex; align-items: center; gap: 5px; white-space: nowrap; transition: opacity .3s; }
-.save-dot { width: 6px; height: 6px; border-radius: 50%; background: #4CAF50; transition: background .3s; }
-.save-dot.syncing { background: #FF9800; }
-.save-dot.error { background: #F44336; }
-.month-jump-bar { display: flex; gap: 3px; align-items: center; overflow-x: auto; scrollbar-width: none; max-width: 55vw; }
-.month-jump-bar::-webkit-scrollbar { display: none; }
-.mj-btn { padding: 3px 10px; font-size: 11px; font-weight: 500; border-radius: 4px; cursor: pointer; border: 1px solid var(--border); background: none; color: var(--text2); font-family: 'Noto Sans TC', sans-serif; transition: all .12s; white-space: nowrap; }
-.mj-btn:hover { background: var(--surface2); color: var(--text); }
-.mj-btn.active { background: var(--text); color: var(--surface); border-color: var(--text); }
+/* ── Header ── */
+.hdr{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;gap:12px;height:52px;position:sticky;top:0;z-index:50;}
+.hdr-logo{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;letter-spacing:.08em;color:var(--text2);white-space:nowrap;}
+.hdr-space{flex:1;}
+.sync-badge{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:#4CAF50;transition:background .3s;}
+.sync-dot.s{background:#FF9800;} .sync-dot.e{background:#F44336;}
+.mj-bar{display:flex;gap:3px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:50vw;}
+.mj-bar::-webkit-scrollbar{display:none;}
+.mj-btn{padding:3px 10px;font-size:11px;font-weight:500;border-radius:4px;cursor:pointer;border:1px solid var(--border);background:none;color:var(--text2);font-family:'Noto Sans TC',sans-serif;transition:all .12s;white-space:nowrap;}
+.mj-btn:hover{background:var(--surface2);color:var(--text);}
+.mj-btn.on{background:var(--text);color:var(--surface);border-color:var(--text);}
+.hdr-btn{padding:5px 12px;font-size:12px;font-weight:500;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);cursor:pointer;color:var(--text2);font-family:'Noto Sans TC',sans-serif;transition:all .12s;white-space:nowrap;}
+.hdr-btn:hover{background:var(--surface2);color:var(--text);}
 
-/* Layout */
-.body-wrap { display: grid; grid-template-columns: 200px 1fr; min-height: calc(100vh - 52px); }
+/* ── Body layout ── */
+.body{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 52px);}
 
-/* Sidebar */
-.sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 20px 16px; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; }
-.sidebar-section-title { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; }
-.worker-card { border-radius: var(--radius); padding: 10px 12px; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; border: 1px solid transparent; }
-.worker-card.w1 { background: var(--w1-light); border-color: var(--w1-mid); }
-.worker-card.w2 { background: var(--w2-light); border-color: var(--w2-mid); }
-.worker-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.worker-name { font-size: 13px; font-weight: 500; flex: 1; cursor: pointer; outline: none; background: none; border: none; font-family: 'Noto Sans TC', sans-serif; color: var(--text); width: 100%; }
-.worker-name:focus { text-decoration: underline; text-underline-offset: 2px; }
-.proj-list { display: flex; flex-direction: column; gap: 3px; }
-.proj-item { display: flex; align-items: center; gap: 7px; padding: 5px 8px; border-radius: var(--radius); font-size: 12px; color: var(--text2); cursor: default; }
-.proj-item:hover { background: var(--surface2); }
-.proj-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.proj-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.proj-del { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--text3); cursor: pointer; border-radius: 3px; opacity: 0; transition: opacity .1s; border: none; background: none; }
-.proj-item:hover .proj-del { opacity: 1; }
-.proj-del:hover { background: #FDECEA; color: var(--accent); }
-.proj-add-row { display: flex; gap: 5px; margin-top: 6px; }
-.proj-add-row input { flex: 1; padding: 5px 8px; font-size: 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', sans-serif; outline: none; }
-.proj-add-row input:focus { border-color: var(--border2); }
-.proj-add-row button { padding: 5px 10px; font-size: 13px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--surface); cursor: pointer; color: var(--text); font-family: 'Noto Sans TC', sans-serif; transition: background .1s; }
-.proj-add-row button:hover { background: var(--surface2); }
-.color-pick-row { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
-.color-swatch { width: 16px; height: 16px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: border-color .1s, transform .1s; }
-.color-swatch:hover, .color-swatch.selected { border-color: var(--text); transform: scale(1.15); }
-.legend { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text3); line-height: 1.8; }
-.legend-row { display: flex; align-items: center; gap: 6px; }
-.legend-key { width: 14px; height: 14px; background: var(--key); border: 1px solid var(--key-border); border-radius: 3px; }
+/* ── Sidebar ── */
+.sb{background:var(--surface);border-right:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;gap:20px;position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;}
+.sb-ttl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
+.wk-card{border-radius:var(--r);padding:10px 12px;display:flex;align-items:center;gap:8px;margin-bottom:6px;border:1px solid transparent;}
+.wk-card.a{background:var(--w1-light);border-color:var(--w1-mid);}
+.wk-card.b{background:var(--w2-light);border-color:var(--w2-mid);}
+.wk-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.wk-inp{font-size:13px;font-weight:500;flex:1;cursor:pointer;outline:none;background:none;border:none;font-family:'Noto Sans TC',sans-serif;color:var(--text);width:100%;}
+.wk-inp:focus{text-decoration:underline;text-underline-offset:2px;}
+.pj-list{display:flex;flex-direction:column;gap:3px;}
+.pj-item{display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:var(--r);font-size:12px;color:var(--text2);cursor:default;}
+.pj-item:hover{background:var(--surface2);}
+.pj-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.pj-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pj-del{width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:pointer;border-radius:3px;opacity:0;transition:opacity .1s;border:none;background:none;}
+.pj-item:hover .pj-del{opacity:1;}
+.pj-del:hover{background:#FDECEA;color:var(--accent);}
+.pj-add{display:flex;gap:5px;margin-top:6px;}
+.pj-add input{flex:1;padding:5px 8px;font-size:12px;border:1px solid var(--border);border-radius:var(--r);background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;outline:none;}
+.pj-add input:focus{border-color:var(--border2);}
+.pj-add button{padding:5px 10px;font-size:13px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);cursor:pointer;color:var(--text);font-family:'Noto Sans TC',sans-serif;transition:background .1s;}
+.pj-add button:hover{background:var(--surface2);}
+.cp-row{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap;}
+.cp-sw{width:16px;height:16px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:border-color .1s,transform .1s;}
+.cp-sw:hover,.cp-sw.on{border-color:var(--text);transform:scale(1.15);}
+.lgd{margin-top:auto;padding-top:16px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);line-height:1.8;}
+.lgd-row{display:flex;align-items:center;gap:6px;}
+.lgd-key{width:14px;height:14px;background:var(--key);border:1px solid var(--key-border);border-radius:3px;}
 
-/* Calendar area */
-.cal-area { padding: 0 20px 60px; }
-.month-block { margin-bottom: 40px; padding-top: 24px; }
-.month-heading { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500; color: var(--text2); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-.cal-workers-header { display: grid; grid-template-columns: 52px minmax(0,1fr) 16px minmax(0,1fr); gap: 0 4px; margin-bottom: 6px; align-items: center; }
-.cal-worker-label { font-size: 12px; font-weight: 700; letter-spacing: .05em; padding: 6px 10px; border-radius: var(--radius); display: flex; align-items: center; gap: 6px; }
-.cal-worker-label.w1 { background: var(--w1-light); color: var(--w1); }
-.cal-worker-label.w2 { background: var(--w2-light); color: var(--w2); }
-.cal-worker-dot { width: 8px; height: 8px; border-radius: 50%; }
-.weekday-row { display: grid; grid-template-columns: 52px minmax(0,1fr) 16px minmax(0,1fr); gap: 0 4px; margin-bottom: 4px; }
-.weekday-cells { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 4px; }
-.weekday-cell { text-align: center; font-size: 10px; font-weight: 700; letter-spacing: .06em; color: var(--text3); padding: 3px 0; }
-.weekday-cell.sun { color: #C44040; }
-.weekday-cell.sat { color: #4060C4; }
-.cal-week-row { display: grid; grid-template-columns: 52px minmax(0,1fr) 16px minmax(0,1fr); gap: 0 4px; margin-bottom: 4px; align-items: stretch; }
-.week-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text3); display: flex; align-items: flex-start; justify-content: center; padding-top: 7px; }
-.week-cells { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 4px; }
-.day-divider { width: 1px; background: var(--border); margin: 4px 0; }
-.day-cell { min-height: 90px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 7px; cursor: pointer; transition: border-color .15s, box-shadow .15s; display: flex; flex-direction: column; gap: 2px; }
-.day-cell:hover { border-color: var(--border2); box-shadow: 0 2px 8px rgba(0,0,0,.06); z-index: 1; }
-.day-cell.other-month { background: var(--bg); opacity: .45; cursor: default; }
-.day-cell.other-month:hover { border-color: var(--border); box-shadow: none; }
-.day-cell.is-today { border-color: var(--accent) !important; }
-.day-cell.is-key { background: var(--key); border-color: var(--key-border); }
-.day-num { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; color: var(--text2); display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
-.day-num .key-star { font-size: 10px; color: var(--key-text); }
-.today-dot { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; }
-.task-chip { font-size: 10px; padding: 2px 5px; border-radius: 3px; color: #fff; white-space: normal; word-break: break-word; overflow-wrap: break-word; max-width: 100%; line-height: 1.4; }
-.task-more { font-size: 9px; color: var(--text3); padding: 1px 0; }
-.key-note-preview { font-size: 9px; color: var(--key-text); margin-top: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.add-month-wrap { display: flex; justify-content: center; padding: 10px 0 40px; }
-.add-month-btn { padding: 10px 28px; font-size: 13px; font-weight: 500; border: 1px dashed var(--border2); border-radius: var(--radius-lg); background: none; cursor: pointer; color: var(--text2); font-family: 'Noto Sans TC', sans-serif; transition: all .15s; display: flex; align-items: center; gap: 8px; }
-.add-month-btn:hover { background: var(--surface); border-color: var(--text2); color: var(--text); }
+/* ── Calendar ── */
+.cal-area{padding:0 20px 60px;}
+.mo-block{margin-bottom:40px;padding-top:24px;}
+.mo-hd{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:var(--text2);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.wk-hdr{display:grid;grid-template-columns:52px minmax(0,1fr) 16px minmax(0,1fr);gap:0 4px;margin-bottom:6px;align-items:center;}
+.wk-lbl{font-size:12px;font-weight:700;letter-spacing:.05em;padding:6px 10px;border-radius:var(--r);display:flex;align-items:center;gap:6px;}
+.wk-lbl.a{background:var(--w1-light);color:var(--w1);}
+.wk-lbl.b{background:var(--w2-light);color:var(--w2);}
+.wk-ldot{width:8px;height:8px;border-radius:50%;}
+.wd-row{display:grid;grid-template-columns:52px minmax(0,1fr) 16px minmax(0,1fr);gap:0 4px;margin-bottom:4px;}
+.wd-cells{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;}
+.wd-cell{text-align:center;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--text3);padding:3px 0;}
+.wd-cell.su{color:#C44040;} .wd-cell.sa{color:#4060C4;}
+.wk-row{display:grid;grid-template-columns:52px minmax(0,1fr) 16px minmax(0,1fr);gap:0 4px;margin-bottom:4px;align-items:stretch;}
+.wk-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);display:flex;align-items:flex-start;justify-content:center;padding-top:7px;}
+.day-cells{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;}
+.col-div{width:1px;background:var(--border);margin:4px 0;}
+.dc{min-height:90px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:6px 7px;cursor:pointer;transition:border-color .15s,box-shadow .15s;display:flex;flex-direction:column;gap:2px;}
+.dc:hover{border-color:var(--border2);box-shadow:0 2px 8px rgba(0,0,0,.06);z-index:1;}
+.dc.past{opacity:.45;cursor:default;background:var(--bg);}
+.dc.past:hover{border-color:var(--border);box-shadow:none;}
+.dc.td{border-color:var(--accent)!important;}
+.dc.kd{background:var(--key);border-color:var(--key-border);}
+.dn{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--text2);display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;}
+.dn .ks{font-size:10px;color:var(--key-text);}
+.td-dot{width:5px;height:5px;background:var(--accent);border-radius:50%;}
+.tc{font-size:10px;padding:2px 5px;border-radius:3px;color:#fff;white-space:normal;word-break:break-word;overflow-wrap:break-word;max-width:100%;line-height:1.4;}
+.tm{font-size:9px;color:var(--text3);padding:1px 0;}
+.kn-prev{font-size:9px;color:var(--key-text);margin-top:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.add-mo-wrap{display:flex;justify-content:center;padding:10px 0 40px;}
+.add-mo-btn{padding:10px 28px;font-size:13px;font-weight:500;border:1px dashed var(--border2);border-radius:var(--rl);background:none;cursor:pointer;color:var(--text2);font-family:'Noto Sans TC',sans-serif;transition:all .15s;display:flex;align-items:center;gap:8px;}
+.add-mo-btn:hover{background:var(--surface);border-color:var(--text2);color:var(--text);}
 
-/* Loading screen */
-.loading-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; gap: 16px; }
-.loading-spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--text2); border-radius: 50%; animation: spin .8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-text { font-size: 13px; color: var(--text2); }
+/* ── Loading ── */
+.loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:16px;}
+.spin{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--text2);border-radius:50%;animation:sp .8s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg);}}
 
-/* Modal */
-.overlay { position: fixed; inset: 0; background: rgba(20,18,14,.45); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 200; }
-.modal { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius-lg); width: 540px; max-height: 88vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.18); display: flex; flex-direction: column; }
-.modal-header { padding: 18px 20px 14px; border-bottom: 1px solid var(--border); }
-.modal-date { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text3); margin-bottom: 2px; }
-.modal-title { font-size: 16px; font-weight: 700; }
-.modal-body { padding: 16px 20px; flex: 1; overflow-y: auto; }
-.modal-footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; background: var(--surface); border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
-.worker-section { margin-bottom: 18px; }
-.ws-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
-.ws-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.ws-name { font-size: 13px; font-weight: 700; }
-.task-row { display: flex; align-items: center; gap: 6px; padding: 5px 8px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 5px; background: var(--bg); }
-.task-row-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.task-row-text { flex: 1; font-size: 12px; }
-.task-row-proj { font-size: 10px; color: var(--text3); white-space: nowrap; }
-.task-row-del { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px; cursor: pointer; border: none; background: none; color: var(--text3); border-radius: 3px; }
-.task-row-del:hover { background: #FDECEA; color: var(--accent); }
-.empty-hint { font-size: 12px; color: var(--text3); padding: 6px 0; font-style: italic; }
-.tag-section-label { font-size: 10px; color: var(--text3); margin-bottom: 5px; letter-spacing: .04em; }
-.tag-suggestions { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
-.tag-chip { padding: 3px 9px; font-size: 11px; border-radius: 20px; border: 1px solid var(--border2); background: var(--surface2); cursor: pointer; color: var(--text2); font-family: 'Noto Sans TC', sans-serif; transition: all .1s; display: inline-flex; align-items: center; gap: 4px; }
-.tag-chip:hover { background: var(--surface); border-color: var(--text2); color: var(--text); }
-.tag-chip-text { pointer-events: none; }
-.tag-chip-del { font-size: 12px; color: var(--text3); line-height: 1; padding: 0 1px; border-radius: 50%; transition: color .1s, background .1s; }
-.tag-chip-del:hover { color: var(--accent); background: #FDECEA; }
-.add-row { display: flex; gap: 6px; margin-top: 6px; }
-.add-row input, .add-row select { padding: 6px 9px; font-size: 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); font-family: 'Noto Sans TC', sans-serif; outline: none; }
-.add-row input:focus, .add-row select:focus { border-color: var(--border2); }
-.add-row input { flex: 1; }
-.add-row select { width: 120px; }
-.add-row button { padding: 6px 12px; font-size: 12px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--surface); cursor: pointer; font-family: 'Noto Sans TC', sans-serif; color: var(--text); transition: background .1s; white-space: nowrap; }
-.add-row button:hover { background: var(--surface2); }
-.key-date-toggle { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; font-size: 12px; color: var(--text2); border: 1px solid var(--border); background: var(--bg); transition: background .1s; user-select: none; }
-.key-date-toggle input { cursor: pointer; accent-color: var(--key-text); }
-.key-date-toggle:hover { background: var(--key); border-color: var(--key-border); }
-.key-date-toggle.active { background: var(--key); border-color: var(--key-border); color: var(--key-text); }
-.key-note-wrap { margin-top: 6px; padding: 10px; background: var(--key); border: 1px solid var(--key-border); border-radius: var(--radius); }
-.key-note-label { font-size: 11px; font-weight: 700; color: var(--key-text); margin-bottom: 5px; }
-.key-note-wrap textarea { width: 100%; padding: 6px 8px; font-size: 12px; border: 1px solid var(--key-border); border-radius: 4px; background: #FFFDF0; color: var(--text); font-family: 'Noto Sans TC', sans-serif; resize: vertical; min-height: 50px; outline: none; }
-.btn-cancel, .btn-save { padding: 7px 18px; font-size: 13px; border-radius: var(--radius); cursor: pointer; font-family: 'Noto Sans TC', sans-serif; font-weight: 500; border: 1px solid var(--border2); transition: background .1s; }
-.btn-cancel { background: var(--bg); color: var(--text2); }
-.btn-cancel:hover { background: var(--surface2); }
-.btn-save { background: var(--text); color: var(--surface); border-color: var(--text); }
-.btn-save:hover { background: #3A3530; }
+/* ── Overlay / Modal ── */
+.ov{position:fixed;inset:0;background:rgba(20,18,14,.45);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;z-index:200;}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:var(--rl);width:540px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.18);display:flex;flex-direction:column;}
+.mh{padding:18px 20px 14px;border-bottom:1px solid var(--border);}
+.mh-date{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);margin-bottom:2px;}
+.mh-title{font-size:16px;font-weight:700;}
+.mb{padding:16px 20px;flex:1;overflow-y:auto;}
+.mf{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;background:var(--surface);border-radius:0 0 var(--rl) var(--rl);}
+.ws{margin-bottom:18px;}
+.ws-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.ws-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.ws-name{font-size:13px;font-weight:700;}
+.tr{display:flex;align-items:center;gap:6px;padding:5px 8px;border:1px solid var(--border);border-radius:var(--r);margin-bottom:5px;background:var(--bg);}
+.tr-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.tr-txt{flex:1;font-size:12px;}
+.tr-pj{font-size:10px;color:var(--text3);white-space:nowrap;}
+.tr-del{width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;border:none;background:none;color:var(--text3);border-radius:3px;}
+.tr-del:hover{background:#FDECEA;color:var(--accent);}
+.empty{font-size:12px;color:var(--text3);padding:6px 0;font-style:italic;}
+.tag-lbl{font-size:10px;color:var(--text3);margin-bottom:5px;letter-spacing:.04em;}
+.tag-wrap{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;}
+.tag{padding:3px 9px;font-size:11px;border-radius:20px;border:1px solid var(--border2);background:var(--surface2);cursor:pointer;color:var(--text2);font-family:'Noto Sans TC',sans-serif;transition:all .1s;display:inline-flex;align-items:center;gap:4px;}
+.tag:hover{background:var(--surface);border-color:var(--text2);color:var(--text);}
+.tag-t{pointer-events:none;}
+.tag-x{font-size:12px;color:var(--text3);line-height:1;padding:0 1px;border-radius:50%;transition:color .1s,background .1s;}
+.tag-x:hover{color:var(--accent);background:#FDECEA;}
+.add-row{display:flex;gap:6px;margin-top:6px;}
+.add-row input,.add-row select{padding:6px 9px;font-size:12px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--text);font-family:'Noto Sans TC',sans-serif;outline:none;}
+.add-row input:focus,.add-row select:focus{border-color:var(--border2);}
+.add-row input{flex:1;} .add-row select{width:120px;}
+.add-row button{padding:6px 12px;font-size:12px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);cursor:pointer;font-family:'Noto Sans TC',sans-serif;color:var(--text);transition:background .1s;white-space:nowrap;}
+.add-row button:hover{background:var(--surface2);}
+.kd-tog{display:flex;align-items:center;gap:8px;margin-top:12px;padding:8px 10px;border-radius:var(--r);cursor:pointer;font-size:12px;color:var(--text2);border:1px solid var(--border);background:var(--bg);transition:background .1s;user-select:none;}
+.kd-tog input{cursor:pointer;accent-color:var(--key-text);}
+.kd-tog:hover{background:var(--key);border-color:var(--key-border);}
+.kd-tog.on{background:var(--key);border-color:var(--key-border);color:var(--key-text);}
+.kd-box{margin-top:6px;padding:10px;background:var(--key);border:1px solid var(--key-border);border-radius:var(--r);}
+.kd-box-lbl{font-size:11px;font-weight:700;color:var(--key-text);margin-bottom:5px;}
+.kd-box textarea{width:100%;padding:6px 8px;font-size:12px;border:1px solid var(--key-border);border-radius:4px;background:#FFFDF0;color:var(--text);font-family:'Noto Sans TC',sans-serif;resize:vertical;min-height:50px;outline:none;}
+.btn-c,.btn-s{padding:7px 18px;font-size:13px;border-radius:var(--r);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-weight:500;border:1px solid var(--border2);transition:background .1s;}
+.btn-c{background:var(--bg);color:var(--text2);} .btn-c:hover{background:var(--surface2);}
+.btn-s{background:var(--text);color:var(--surface);border-color:var(--text);} .btn-s:hover{background:#3A3530;}
 
-/* Export */
-.export-btn { padding: 5px 14px; font-size: 12px; font-weight: 500; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--surface); cursor: pointer; color: var(--text2); font-family: 'Noto Sans TC', sans-serif; transition: all .12s; white-space: nowrap; }
-.export-btn:hover { background: var(--surface2); color: var(--text); }
-.export-modal { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius-lg); width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,.18); padding: 24px; }
-.export-modal h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-.export-modal .sub { font-size: 12px; color: var(--text3); margin-bottom: 18px; }
-.month-check-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; max-height: 280px; overflow-y: auto; }
-.month-check-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: background .1s; user-select: none; }
-.month-check-item:hover { background: var(--surface2); }
-.month-check-item.checked { background: var(--surface2); border-color: var(--border2); }
-.month-check-item input { cursor: pointer; accent-color: var(--text); width: 14px; height: 14px; }
-.month-check-label { font-size: 13px; }
-.export-actions { display: flex; gap: 8px; justify-content: flex-end; align-items: center; }
-.export-progress { font-size: 12px; color: var(--text3); flex: 1; }
-.export-sel-all { font-size: 11px; color: var(--text3); cursor: pointer; text-decoration: underline; margin-right: auto; }
+/* ── Export modal ── */
+.exp-modal{background:var(--surface);border:1px solid var(--border2);border-radius:var(--rl);width:420px;box-shadow:0 20px 60px rgba(0,0,0,.18);padding:24px;}
+.exp-modal h3{font-size:15px;font-weight:700;margin-bottom:4px;}
+.exp-sub{font-size:12px;color:var(--text3);margin-bottom:18px;}
+.exp-list{display:flex;flex-direction:column;gap:6px;margin-bottom:20px;max-height:280px;overflow-y:auto;}
+.exp-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--border);border-radius:var(--r);cursor:pointer;user-select:none;transition:background .1s;}
+.exp-item:hover{background:var(--surface2);}
+.exp-item.on{background:var(--surface2);border-color:var(--border2);}
+.exp-item input{cursor:pointer;accent-color:var(--text);width:14px;height:14px;}
+.exp-actions{display:flex;gap:8px;justify-content:flex-end;align-items:center;}
+.exp-prog{font-size:12px;color:var(--text3);flex:1;}
+.exp-all{font-size:11px;color:var(--text3);cursor:pointer;text-decoration:underline;margin-right:auto;}
 
-/* Migrate banner */
-.migrate-banner { background: #EBF0FA; border: 1px solid var(--w1-mid); border-radius: var(--radius); padding: 12px 16px; display: flex; align-items: center; gap: 12px; margin: 20px 20px 0; }
-.migrate-banner-text { flex: 1; font-size: 12px; color: var(--w1); line-height: 1.5; }
-.migrate-banner-text strong { font-weight: 700; display: block; margin-bottom: 2px; }
-.migrate-btn { padding: 6px 14px; font-size: 12px; font-weight: 500; border: 1px solid var(--w1); border-radius: var(--radius); background: var(--w1); cursor: pointer; color: #fff; font-family: 'Noto Sans TC', sans-serif; white-space: nowrap; transition: opacity .1s; }
-.migrate-btn:hover { opacity: .85; }
-.migrate-close { font-size: 16px; color: var(--text3); cursor: pointer; padding: 2px; line-height: 1; background: none; border: none; }
+/* ── Migrate banner ── */
+.mig-banner{background:#EBF0FA;border:1px solid var(--w1-mid);border-radius:var(--r);padding:12px 16px;display:flex;align-items:center;gap:12px;margin:16px 20px 0;}
+.mig-txt{flex:1;font-size:12px;color:var(--w1);line-height:1.5;}
+.mig-txt strong{font-weight:700;display:block;margin-bottom:2px;}
+.mig-btn{padding:6px 14px;font-size:12px;font-weight:500;border:1px solid var(--w1);border-radius:var(--r);background:var(--w1);cursor:pointer;color:#fff;font-family:'Noto Sans TC',sans-serif;white-space:nowrap;transition:opacity .1s;}
+.mig-btn:hover{opacity:.85;}
+.mig-x{font-size:16px;color:var(--text3);cursor:pointer;padding:2px;line-height:1;background:none;border:none;}
+
+/* ── Mobile bottom nav ── */
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:60;height:56px;}
+.mob-nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;color:var(--text3);cursor:pointer;border:none;background:none;font-family:'Noto Sans TC',sans-serif;padding:0;}
+.mob-nav-btn.on{color:var(--text);}
+.mob-nav-ico{font-size:17px;line-height:1;}
+
+/* ── Mobile drawer ── */
+.mob-drawer{display:none;position:fixed;inset:0;z-index:150;pointer-events:none;}
+.mob-drawer-bg{position:absolute;inset:0;background:rgba(20,18,14,.45);opacity:0;transition:opacity .2s;}
+.mob-drawer-panel{position:absolute;left:0;top:0;bottom:0;width:270px;background:var(--surface);transform:translateX(-100%);transition:transform .25s;padding:20px 16px;display:flex;flex-direction:column;gap:20px;overflow-y:auto;}
+.mob-drawer.open{pointer-events:auto;}
+.mob-drawer.open .mob-drawer-bg{opacity:1;}
+.mob-drawer.open .mob-drawer-panel{transform:translateX(0);}
+.mob-drawer-x{align-self:flex-end;background:none;border:none;font-size:20px;cursor:pointer;color:var(--text2);padding:4px;}
+
+/* ── RWD breakpoint ── */
+@media (max-width:768px){
+  .hdr{padding:0 12px;gap:8px;}
+  .hdr-logo{font-size:11px;}
+  .sync-badge span:last-child{display:none;}
+  .hdr-btn{display:none;}
+  .mj-bar{max-width:45vw;}
+  .mj-btn{padding:2px 7px;font-size:10px;}
+
+  .body{grid-template-columns:1fr;}
+  .sb{display:none;}
+
+  .mob-nav{display:flex;}
+  .mob-drawer{display:block;}
+
+  .cal-area{padding:0 10px 72px;}
+  .mo-hd{font-size:15px;}
+
+  /* Single-column calendar on mobile */
+  .wk-hdr{grid-template-columns:36px 1fr;}
+  .wk-hdr .d-hide{display:none!important;}
+  .wd-row{grid-template-columns:36px 1fr;}
+  .wd-row .d-hide{display:none!important;}
+  .wk-row{grid-template-columns:36px 1fr;}
+  .wk-row .d-hide{display:none!important;}
+  .d-hide{display:none!important;}
+
+  .wk-num{font-size:9px;}
+  .dc{min-height:60px;padding:4px 5px;}
+  .dn{font-size:10px;}
+  .tc{font-size:9px;padding:1px 4px;}
+
+  .ov{align-items:flex-end;}
+  .modal{width:100%;max-height:92vh;border-radius:var(--rl) var(--rl) 0 0;}
+  .exp-modal{width:100%;border-radius:var(--rl) var(--rl) 0 0;}
+}
+@media (min-width:769px){
+  .mob-nav{display:none!important;}
+  .mob-drawer{display:none!important;}
+  .d-hide{display:block;}
+}
 </style>
 </head>
 <body>
 
-<!-- Loading screen -->
-<div class="loading-screen" id="loadingScreen">
-  <div class="loading-spinner"></div>
-  <div class="loading-text">連線中…</div>
+<div class="loading" id="loading">
+  <div class="spin"></div>
+  <div style="font-size:13px;color:var(--text2)">連線中…</div>
 </div>
 
-<div id="appWrap" style="display:none">
-<div class="header">
-  <span class="header-logo">SCHED</span>
-  <div class="header-spacer"></div>
-  <div class="save-indicator" id="saveIndicator"><span class="save-dot" id="saveDot"></span><span id="saveText">已同步</span></div>
-  <button class="export-btn" onclick="openExport()">⬇ 匯出 JPG</button>
-  <div class="month-jump-bar" id="monthJumpBar"></div>
+<div id="app" style="display:none">
+
+<!-- Header -->
+<div class="hdr">
+  <span class="hdr-logo">SCHED</span>
+  <div class="hdr-space"></div>
+  <div class="sync-badge"><span class="sync-dot" id="dot"></span><span id="sync-txt">已同步</span></div>
+  <button class="hdr-btn" onclick="openExp()">⬇ 匯出 JPG</button>
+  <div class="mj-bar" id="mjbar"></div>
 </div>
 
-<div class="body-wrap">
-  <div class="sidebar">
+<!-- Mobile bottom nav -->
+<div class="mob-nav">
+  <button class="mob-nav-btn" onclick="openDrawer()"><span class="mob-nav-ico">☰</span><span>專案</span></button>
+  <button class="mob-nav-btn on" id="mnA" onclick="setMobW(0)"><span class="mob-nav-ico" style="color:var(--w1)">●</span><span id="mnAL">A</span></button>
+  <button class="mob-nav-btn" id="mnB" onclick="setMobW(1)"><span class="mob-nav-ico" style="color:var(--w2)">●</span><span id="mnBL">B</span></button>
+  <button class="mob-nav-btn" onclick="openExp()"><span class="mob-nav-ico">⬇</span><span>匯出</span></button>
+</div>
+
+<!-- Mobile drawer -->
+<div class="mob-drawer" id="drawer">
+  <div class="mob-drawer-bg" onclick="closeDrawer()"></div>
+  <div class="mob-drawer-panel">
+    <button class="mob-drawer-x" onclick="closeDrawer()">✕</button>
     <div>
-      <div class="sidebar-section-title">工作者</div>
-      <div class="worker-card w1">
-        <div class="worker-dot" style="background:var(--w1)"></div>
-        <input class="worker-name" id="w1name" value="工作者 A" onchange="onWorkerNameChange()" />
-      </div>
-      <div class="worker-card w2">
-        <div class="worker-dot" style="background:var(--w2)"></div>
-        <input class="worker-name" id="w2name" value="工作者 B" onchange="onWorkerNameChange()" />
-      </div>
+      <div class="sb-ttl">工作者</div>
+      <div class="wk-card a"><div class="wk-dot" style="background:var(--w1)"></div><input class="wk-inp" id="n1m" value="工作者 A" onchange="onNameChange()"/></div>
+      <div class="wk-card b"><div class="wk-dot" style="background:var(--w2)"></div><input class="wk-inp" id="n2m" value="工作者 B" onchange="onNameChange()"/></div>
     </div>
     <div style="flex:1;min-height:0;display:flex;flex-direction:column">
-      <div class="sidebar-section-title">專案</div>
-      <div class="proj-list" id="projList"></div>
+      <div class="sb-ttl">專案</div>
+      <div class="pj-list" id="pjm"></div>
       <div style="margin-top:10px">
-        <div class="proj-add-row">
-          <input id="newProjInput" placeholder="新專案名稱" onkeydown="if(event.key==='Enter')addProject()" />
-          <button onclick="addProject()">+</button>
-        </div>
-        <div class="color-pick-row" id="colorPicker"></div>
+        <div class="pj-add"><input id="npjm" placeholder="新專案名稱" onkeydown="if(event.key==='Enter')doAddProj('npjm')"/><button onclick="doAddProj('npjm')">+</button></div>
+        <div class="cp-row" id="cpm"></div>
       </div>
     </div>
-    <div class="legend">
-      <div class="legend-row"><div class="legend-key"></div>重點日期</div>
+    <div class="lgd">
+      <div class="lgd-row"><div class="lgd-key"></div>重點日期</div>
+      <div style="margin-top:4px;color:#4CAF50">● 資料即時雲端同步</div>
+    </div>
+  </div>
+</div>
+
+<!-- Body -->
+<div class="body">
+  <!-- Desktop sidebar -->
+  <div class="sb">
+    <div>
+      <div class="sb-ttl">工作者</div>
+      <div class="wk-card a"><div class="wk-dot" style="background:var(--w1)"></div><input class="wk-inp" id="n1d" value="工作者 A" onchange="onNameChange()"/></div>
+      <div class="wk-card b"><div class="wk-dot" style="background:var(--w2)"></div><input class="wk-inp" id="n2d" value="工作者 B" onchange="onNameChange()"/></div>
+    </div>
+    <div style="flex:1;min-height:0;display:flex;flex-direction:column">
+      <div class="sb-ttl">專案</div>
+      <div class="pj-list" id="pjd"></div>
+      <div style="margin-top:10px">
+        <div class="pj-add"><input id="npjd" placeholder="新專案名稱" onkeydown="if(event.key==='Enter')doAddProj('npjd')"/><button onclick="doAddProj('npjd')">+</button></div>
+        <div class="cp-row" id="cpd"></div>
+      </div>
+    </div>
+    <div class="lgd">
+      <div class="lgd-row"><div class="lgd-key"></div>重點日期</div>
       <div style="margin-top:4px">點擊日期格新增工作項目</div>
       <div style="margin-top:2px">歷史項目可快速帶入</div>
       <div style="margin-top:2px;color:#4CAF50">● 資料即時雲端同步</div>
@@ -226,564 +303,479 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: va
   </div>
 
   <div style="display:flex;flex-direction:column;min-width:0">
-    <div id="migrateBannerWrap"></div>
-    <div class="cal-area" id="calArea">
-      <div class="add-month-wrap">
-        <button class="add-month-btn" onclick="addMonth()">＋ 新增下一個月份</button>
-      </div>
+    <div id="migwrap"></div>
+    <div class="cal-area" id="cal">
+      <div class="add-mo-wrap"><button class="add-mo-btn" onclick="addMonth()">＋ 新增下一個月份</button></div>
     </div>
   </div>
 </div>
-</div>
 
-<!-- Day edit modal -->
-<div class="overlay" id="overlay" style="display:none" onclick="closeOverlay(event)">
+</div><!-- /app -->
+
+<!-- Day modal -->
+<div class="ov" id="ov" style="display:none" onclick="ovClick(event)">
   <div class="modal">
-    <div class="modal-header">
-      <div class="modal-date" id="mDate"></div>
-      <div class="modal-title">編輯工作項目</div>
-    </div>
-    <div class="modal-body">
-      <div class="worker-section">
-        <div class="ws-header"><div class="ws-dot" style="background:var(--w1)"></div><div class="ws-name" id="mW1Name">工作者 A</div></div>
-        <div id="tagSuggestA"></div>
-        <div id="taskListA"></div>
+    <div class="mh"><div class="mh-date" id="mdDate"></div><div class="mh-title">編輯工作項目</div></div>
+    <div class="mb">
+      <div class="ws">
+        <div class="ws-hd"><div class="ws-dot" style="background:var(--w1)"></div><div class="ws-name" id="mwA">A</div></div>
+        <div id="tagA"></div><div id="listA"></div>
         <div class="add-row">
-          <input id="newTextA" placeholder="工作項目描述" onkeydown="if(event.key==='Enter')addTask(0)" oninput="filterTags(0)" />
-          <select id="newProjA"></select>
-          <button onclick="addTask(0)">新增</button>
+          <input id="txtA" placeholder="工作項目描述" onkeydown="if(event.key==='Enter')doAddTask(0)" oninput="filterTag(0)"/>
+          <select id="pjA"></select>
+          <button onclick="doAddTask(0)">新增</button>
         </div>
       </div>
-      <div class="worker-section">
-        <div class="ws-header"><div class="ws-dot" style="background:var(--w2)"></div><div class="ws-name" id="mW2Name">工作者 B</div></div>
-        <div id="tagSuggestB"></div>
-        <div id="taskListB"></div>
+      <div class="ws">
+        <div class="ws-hd"><div class="ws-dot" style="background:var(--w2)"></div><div class="ws-name" id="mwB">B</div></div>
+        <div id="tagB"></div><div id="listB"></div>
         <div class="add-row">
-          <input id="newTextB" placeholder="工作項目描述" onkeydown="if(event.key==='Enter')addTask(1)" oninput="filterTags(1)" />
-          <select id="newProjB"></select>
-          <button onclick="addTask(1)">新增</button>
+          <input id="txtB" placeholder="工作項目描述" onkeydown="if(event.key==='Enter')doAddTask(1)" oninput="filterTag(1)"/>
+          <select id="pjB"></select>
+          <button onclick="doAddTask(1)">新增</button>
         </div>
       </div>
-      <label class="key-date-toggle" id="keyToggle" onclick="toggleKey()">
-        <input type="checkbox" id="keyCheck" onclick="event.stopPropagation();toggleKey()" />
-        ★ 標記為重點日期（交付物、里程碑等）
+      <label class="kd-tog" id="kdTog" onclick="togKd()">
+        <input type="checkbox" id="kdChk" onclick="event.stopPropagation();togKd()"/>
+        ★ 標記為重點日期
       </label>
-      <div id="keyNoteWrap" style="display:none" class="key-note-wrap">
-        <div class="key-note-label">重點說明</div>
-        <textarea id="keyNote" placeholder="例：Q2 報告交付、客戶簡報、系統上線..."></textarea>
+      <div id="kdBox" style="display:none" class="kd-box">
+        <div class="kd-box-lbl">重點說明</div>
+        <textarea id="kdNote" placeholder="例：Q2報告交付、客戶簡報…"></textarea>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeModal()">取消</button>
-      <button class="btn-save" onclick="saveDay()">儲存</button>
-    </div>
+    <div class="mf"><button class="btn-c" onclick="closeOv()">取消</button><button class="btn-s" onclick="saveDay()">儲存</button></div>
   </div>
 </div>
 
 <!-- Export modal -->
-<div class="overlay" id="exportOverlay" style="display:none" onclick="closeExportOverlay(event)">
-  <div class="export-modal">
+<div class="ov" id="expOv" style="display:none" onclick="expOvClick(event)">
+  <div class="exp-modal">
     <h3>匯出月份為 JPG</h3>
-    <div class="sub">選擇的月份會合成為一整張圖片</div>
-    <div class="month-check-list" id="monthCheckList"></div>
-    <div class="export-actions">
-      <span class="export-sel-all" onclick="toggleAllMonths()">全選 / 取消</span>
-      <span class="export-progress" id="exportProgress"></span>
-      <button class="btn-cancel" onclick="closeExport()">取消</button>
-      <button class="btn-save" id="exportDoBtn" onclick="doExport()">開始匯出</button>
+    <div class="exp-sub">選擇的月份會合成為一整張圖片</div>
+    <div class="exp-list" id="expList"></div>
+    <div class="exp-actions">
+      <span class="exp-all" onclick="togAllMo()">全選 / 取消</span>
+      <span class="exp-prog" id="expProg"></span>
+      <button class="btn-c" onclick="closeExp()">取消</button>
+      <button class="btn-s" id="expBtn" onclick="doExport()">開始匯出</button>
     </div>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-<!-- Firebase SDK -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+import{initializeApp}from"https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import{getFirestore,doc,getDoc,setDoc,onSnapshot}from"https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDVCtUXZfOdpjLRRRVDRTZ0eFd3wZTm0xk",
-  authDomain: "yushi-schedule.firebaseapp.com",
-  projectId: "yushi-schedule",
-  storageBucket: "yushi-schedule.firebasestorage.app",
-  messagingSenderId: "752587780710",
-  appId: "1:752587780710:web:7cf75c75cb740e874f33a7"
+const FB={
+  apiKey:"AIzaSyDVCtUXZfOdpjLRRRVDRTZ0eFd3wZTm0xk",
+  authDomain:"yushi-schedule.firebaseapp.com",
+  projectId:"yushi-schedule",
+  storageBucket:"yushi-schedule.firebasestorage.app",
+  messagingSenderId:"752587780710",
+  appId:"1:752587780710:web:7cf75c75cb740e874f33a7"
 };
+const db=getFirestore(initializeApp(FB));
+const REF=doc(db,'schedule','main');
+const LS='sched2026_v2';
+const WD=['日','一','二','三','四','五','六'];
+const COLS=['#2B5BA8','#1B7A52','#C8410A','#7B3BAF','#A83030','#2B7AA8','#7A6B1B','#8B2E6E','#1B6B7A','#5A5A8A'];
+const MN=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const DOC_REF = doc(db, 'schedule', 'main');
-
-const WD = ['日','一','二','三','四','五','六'];
-const COLORS = ['#2B5BA8','#1B7A52','#C8410A','#7B3BAF','#A83030','#2B7AA8','#7A6B1B','#8B2E6E','#1B6B7A','#5A5A8A'];
-const MN = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
-const LS_KEY = 'sched2026_v2';
-
-let state = {
-  workers: ['工作者 A','工作者 B'],
-  months: [{year:2026,month:3},{year:2026,month:4},{year:2026,month:5},{year:2026,month:6}],
-  projects: [{id:'p1',name:'專案一',color:COLORS[0]},{id:'p2',name:'專案二',color:COLORS[1]}],
-  data: {},
-  taskHistory: [],
-  selectedColor: COLORS[2]
+let S={
+  workers:['工作者 A','工作者 B'],
+  months:[{year:2026,month:3},{year:2026,month:4},{year:2026,month:5},{year:2026,month:6}],
+  projects:[{id:'p1',name:'專案一',color:COLS[0]},{id:'p2',name:'專案二',color:COLS[1]}],
+  data:{},taskHistory:[],selectedColor:COLS[2]
 };
+let mw=0; // mobile active worker
+let ignSnap=false;
+let saveT=null;
+let edit={dk:'',tA:[],tB:[],kd:false,kn:''};
 
-let saveTimer = null;
-let ignoreNextSnapshot = false;
-
-/* ── Firebase sync ── */
-function setSyncStatus(s){
-  const dot=document.getElementById('saveDot');
-  const txt=document.getElementById('saveText');
-  if(s==='syncing'){ dot.className='save-dot syncing'; txt.textContent='同步中…'; }
-  else if(s==='ok'){ dot.className='save-dot'; txt.textContent='已同步'; }
-  else { dot.className='save-dot error'; txt.textContent='同步失敗'; }
+/* ── Sync status ── */
+function ss(t){
+  const d=document.getElementById('dot'),tx=document.getElementById('sync-txt');
+  if(t==='s'){d.className='sync-dot s';tx.textContent='同步中…';}
+  else if(t==='ok'){d.className='sync-dot';tx.textContent='已同步';}
+  else{d.className='sync-dot e';tx.textContent='同步失敗';}
 }
-
-async function pushToFirebase(){
-  try {
-    setSyncStatus('syncing');
-    state.workers=[w1name(),w2name()];
-    ignoreNextSnapshot=true;
-    await setDoc(DOC_REF, state);
-    setSyncStatus('ok');
-  } catch(e){
-    console.error(e);
-    setSyncStatus('error');
-  }
+async function push(){
+  try{
+    ss('s'); S.workers=[n1(),n2()]; ignSnap=true;
+    await setDoc(REF,S); ss('ok');
+  }catch(e){console.error(e);ss('e');}
 }
+function sched(){clearTimeout(saveT);saveT=setTimeout(push,800);}
 
-function schedSave(){
-  clearTimeout(saveTimer);
-  saveTimer=setTimeout(pushToFirebase, 800);
-}
-
-/* Listen for remote changes */
-onSnapshot(DOC_REF, (snap)=>{
-  if(ignoreNextSnapshot){ ignoreNextSnapshot=false; return; }
-  if(snap.exists()){
-    state=snap.data();
-    applyState();
-    setSyncStatus('ok');
-  }
+onSnapshot(REF,snap=>{
+  if(ignSnap){ignSnap=false;return;}
+  if(snap.exists()){S=snap.data();apply();ss('ok');}
 });
 
-function applyState(){
-  document.getElementById('w1name').value=state.workers?.[0]||'工作者 A';
-  document.getElementById('w2name').value=state.workers?.[1]||'工作者 B';
-  renderColorPicker();
-  renderProjects();
-  renderAllMonths();
-}
+/* ── Helpers ── */
+function dk(y,m,d){return`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
+function wdk(w,k){return`w${w}_${k}`;}
+function gdd(w,k){const key=wdk(w,k);if(!S.data[key])S.data[key]={tasks:[],keyDate:false,keyNote:''};return S.data[key];}
+function gp(id){return(S.projects||[]).find(p=>p.id===id);}
+function n1(){return document.getElementById('n1d').value||document.getElementById('n1m').value||'工作者 A';}
+function n2(){return document.getElementById('n2d').value||document.getElementById('n2m').value||'工作者 B';}
 
-/* ── localStorage migration ── */
-function checkMigration(){
-  const local=localStorage.getItem(LS_KEY);
-  if(!local) return;
-  try {
-    const parsed=JSON.parse(local);
-    const hasData=parsed.data&&Object.keys(parsed.data).length>0;
-    if(!hasData) return;
-    const banner=document.getElementById('migrateBannerWrap');
-    banner.innerHTML=`<div class="migrate-banner">
-      <div class="migrate-banner-text">
-        <strong>偵測到本機資料</strong>
-        你的瀏覽器有舊的排程資料，是否要上傳到雲端？上傳後兩人都能看到。
-      </div>
-      <button class="migrate-btn" onclick="doMigrate()">上傳本機資料</button>
-      <button class="migrate-close" onclick="dismissMigrate()">✕</button>
-    </div>`;
-  } catch(e){}
+/* ── Apply state ── */
+function apply(){
+  const a=S.workers?.[0]||'工作者 A',b=S.workers?.[1]||'工作者 B';
+  ['n1d','n1m'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=a;});
+  ['n2d','n2m'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=b;});
+  const lA=document.getElementById('mnAL'),lB=document.getElementById('mnBL');
+  if(lA)lA.textContent=a;if(lB)lB.textContent=b;
+  renderCP();renderPJ();renderCal();
 }
-
-window.doMigrate=async function(){
-  const local=localStorage.getItem(LS_KEY);
-  if(!local) return;
-  try {
-    const parsed=JSON.parse(local);
-    state={...state,...parsed};
-    await pushToFirebase();
-    applyState();
-    localStorage.removeItem(LS_KEY);
-    document.getElementById('migrateBannerWrap').innerHTML='';
-    alert('上傳完成！本機資料已成功同步到雲端。');
-  } catch(e){ alert('上傳失敗，請再試一次'); }
-};
-window.dismissMigrate=function(){
-  document.getElementById('migrateBannerWrap').innerHTML='';
+window.onNameChange=function(){
+  const a=n1(),b=n2();
+  ['n1d','n1m'].forEach(id=>{const e=document.getElementById(id);if(e&&e.value!==a)e.value=a;});
+  ['n2d','n2m'].forEach(id=>{const e=document.getElementById(id);if(e&&e.value!==b)e.value=b;});
+  document.getElementById('mnAL').textContent=a;
+  document.getElementById('mnBL').textContent=b;
+  renderCal();sched();
 };
 
-/* ── State helpers ── */
-function dKey(y,m,d){ return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
-function wdk(w,k){ return `w${w}_${k}`; }
-function getDayData(w,k){
-  const key=wdk(w,k);
-  if(!state.data[key]) state.data[key]={tasks:[],keyDate:false,keyNote:''};
-  return state.data[key];
-}
-function getProj(id){ return state.projects.find(p=>p.id===id); }
-function w1name(){ return document.getElementById('w1name').value||'工作者 A'; }
-function w2name(){ return document.getElementById('w2name').value||'工作者 B'; }
-
-/* ── Task history ── */
-function addToHistory(text){
-  if(!text) return;
-  if(!state.taskHistory) state.taskHistory=[];
-  state.taskHistory=state.taskHistory.filter(t=>t!==text);
-  state.taskHistory.unshift(text);
-  if(state.taskHistory.length>100) state.taskHistory=state.taskHistory.slice(0,100);
-}
-function getTagSuggestions(query){
-  const h=state.taskHistory||[];
-  if(!query) return h.slice(0,14);
-  const q=query.toLowerCase();
-  return h.filter(t=>t.toLowerCase().includes(q)).slice(0,8);
-}
-
-/* ── Projects ── */
-function renderProjects(){
-  document.getElementById('projList').innerHTML=(state.projects||[]).map(p=>`
-    <div class="proj-item">
-      <span class="proj-dot" style="background:${p.color}"></span>
-      <span class="proj-name">${p.name}</span>
-      <button class="proj-del" onclick="deleteProj('${p.id}')">✕</button>
-    </div>`).join('');
-  renderProjSelects();
-}
-window.deleteProj=function(id){
-  if(!confirm('確定刪除此專案？')) return;
-  state.projects=state.projects.filter(p=>p.id!==id);
-  renderProjects(); renderAllMonths(); schedSave();
+/* ── Mobile ── */
+window.setMobW=function(w){
+  mw=w;
+  document.getElementById('mnA').classList.toggle('on',w===0);
+  document.getElementById('mnB').classList.toggle('on',w===1);
+  renderCal();
 };
-function renderProjSelects(){
-  const opts=(state.projects||[]).map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
-  ['newProjA','newProjB'].forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=opts; });
-}
-window.addProject=function(){
-  const inp=document.getElementById('newProjInput');
-  const name=inp.value.trim(); if(!name) return;
-  if(!state.projects) state.projects=[];
-  state.projects.push({id:'p'+Date.now(),name,color:state.selectedColor});
-  inp.value=''; renderProjects(); renderAllMonths(); schedSave();
-};
+window.openDrawer=function(){document.getElementById('drawer').classList.add('open');};
+window.closeDrawer=function(){document.getElementById('drawer').classList.remove('open');};
 
 /* ── Color picker ── */
-function renderColorPicker(){
-  document.getElementById('colorPicker').innerHTML=COLORS.map(c=>`
-    <div class="color-swatch${c===state.selectedColor?' selected':''}" style="background:${c}" onclick="selectColor('${c}')"></div>`).join('');
+function renderCP(){
+  const h=COLS.map(c=>`<div class="cp-sw${c===S.selectedColor?' on':''}" style="background:${c}" onclick="pickC('${c}')"></div>`).join('');
+  ['cpd','cpm'].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=h;});
 }
-window.selectColor=function(c){ state.selectedColor=c; renderColorPicker(); };
+window.pickC=function(c){S.selectedColor=c;renderCP();};
 
-/* ── Month jump bar ── */
-function renderMonthJumpBar(){
-  document.getElementById('monthJumpBar').innerHTML=(state.months||[]).map((m,i)=>
-    `<button class="mj-btn" id="mjb${i}" onclick="jumpToMonth(${i})">${m.year}/${m.month+1}</button>`
-  ).join('');
+/* ── Projects ── */
+function renderPJ(){
+  const h=(S.projects||[]).map(p=>`<div class="pj-item"><span class="pj-dot" style="background:${p.color}"></span><span class="pj-name">${p.name}</span><button class="pj-del" onclick="delPJ('${p.id}')">✕</button></div>`).join('');
+  ['pjd','pjm'].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=h;});
+  const opts=(S.projects||[]).map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  ['pjA','pjB'].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=opts;});
 }
-window.jumpToMonth=function(i){
-  const el=document.getElementById(`mb${i}`);
-  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+window.delPJ=function(id){
+  if(!confirm('確定刪除此專案？'))return;
+  S.projects=S.projects.filter(p=>p.id!==id);
+  renderPJ();renderCal();sched();
+};
+window.doAddProj=function(inputId){
+  const inp=document.getElementById(inputId);
+  const name=inp.value.trim();if(!name)return;
+  S.projects.push({id:'p'+Date.now(),name,color:S.selectedColor});
+  inp.value='';renderPJ();renderCal();sched();
 };
 
-const obs=new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{
-    const idx=parseInt(e.target.id.replace('mb',''));
-    const btn=document.getElementById(`mjb${idx}`);
-    if(btn) btn.classList.toggle('active',e.isIntersecting);
+/* ── Month jump ── */
+function renderMJ(){
+  document.getElementById('mjbar').innerHTML=(S.months||[]).map((m,i)=>
+    `<button class="mj-btn" id="mj${i}" onclick="jumpM(${i})">${m.year}/${m.month+1}</button>`
+  ).join('');
+}
+window.jumpM=function(i){const e=document.getElementById(`mb${i}`);if(e)e.scrollIntoView({behavior:'smooth',block:'start'});};
+
+const obs=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    const i=parseInt(e.target.id.replace('mb',''));
+    const b=document.getElementById(`mj${i}`);
+    if(b)b.classList.toggle('on',e.isIntersecting);
   });
 },{threshold:0.1,rootMargin:'-52px 0px 0px 0px'});
 
-/* ── Add month ── */
-window.addMonth=function(){
-  if(!state.months) state.months=[];
-  const last=state.months[state.months.length-1];
-  let nm=last.month+1, ny=last.year;
-  if(nm>11){ nm=0; ny++; }
-  state.months.push({year:ny,month:nm});
-  schedSave(); renderMonthJumpBar();
-  const idx=state.months.length-1;
-  const wrap=document.getElementById('calArea');
-  const addBtn=wrap.querySelector('.add-month-wrap');
-  const block=document.createElement('div');
-  block.id=`mb${idx}`; block.className='month-block';
-  block.innerHTML=buildMonthHTML(ny,nm);
-  wrap.insertBefore(block,addBtn);
-  obs.observe(block);
-  setTimeout(()=>block.scrollIntoView({behavior:'smooth',block:'start'}),50);
-};
-
-/* ── Render all months ── */
-function renderAllMonths(){
-  const wrap=document.getElementById('calArea');
-  const addBtn=wrap.querySelector('.add-month-wrap');
-  wrap.querySelectorAll('.month-block').forEach(el=>{ obs.unobserve(el); el.remove(); });
-  (state.months||[]).forEach((m,i)=>{
-    const block=document.createElement('div');
-    block.id=`mb${i}`; block.className='month-block';
-    block.innerHTML=buildMonthHTML(m.year,m.month);
-    wrap.insertBefore(block,addBtn);
-    obs.observe(block);
+/* ── Render calendar ── */
+function renderCal(){
+  const wrap=document.getElementById('cal');
+  const addBtn=wrap.querySelector('.add-mo-wrap');
+  wrap.querySelectorAll('.mo-block').forEach(e=>{obs.unobserve(e);e.remove();});
+  (S.months||[]).forEach((m,i)=>{
+    const b=document.createElement('div');
+    b.id=`mb${i}`;b.className='mo-block';
+    b.innerHTML=buildMo(m.year,m.month);
+    wrap.insertBefore(b,addBtn);
+    obs.observe(b);
   });
-  renderMonthJumpBar();
+  renderMJ();
 }
 
-function buildMonthHTML(year,month){
-  const firstDay=new Date(year,month,1).getDay();
-  const daysInMonth=new Date(year,month+1,0).getDate();
+window.addMonth=function(){
+  const last=S.months[S.months.length-1];
+  let nm=last.month+1,ny=last.year;
+  if(nm>11){nm=0;ny++;}
+  S.months.push({year:ny,month:nm});
+  sched();renderMJ();
+  const i=S.months.length-1;
+  const wrap=document.getElementById('cal');
+  const addBtn=wrap.querySelector('.add-mo-wrap');
+  const b=document.createElement('div');b.id=`mb${i}`;b.className='mo-block';
+  b.innerHTML=buildMo(ny,nm);
+  wrap.insertBefore(b,addBtn);obs.observe(b);
+  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),50);
+};
+
+function buildMo(year,month){
+  const fd=new Date(year,month,1).getDay();
+  const dim=new Date(year,month+1,0).getDate();
   const today=new Date();
-  const wdCells=WD.map((d,i)=>`<div class="weekday-cell${i===0?' sun':i===6?' sat':''}">${d}</div>`).join('');
-  let html=`<div class="month-heading">${year}年${MN[month]}</div>
-  <div class="cal-workers-header">
+  const wdc=WD.map((d,i)=>`<div class="wd-cell${i===0?' su':i===6?' sa':''}">${d}</div>`).join('');
+  // On mobile show mw worker; on desktop left=0, right=1
+  const mobN=mw===0?n1():n2();
+  const mobCls=mw===0?'a':'b';
+  const mobClr=mw===0?'var(--w1)':'var(--w2)';
+  let h=`<div class="mo-hd">${year}年${MN[month]}</div>
+  <div class="wk-hdr">
     <div></div>
-    <div class="cal-worker-label w1"><div class="cal-worker-dot" style="background:var(--w1)"></div>${w1name()}</div>
-    <div></div>
-    <div class="cal-worker-label w2"><div class="cal-worker-dot" style="background:var(--w2)"></div>${w2name()}</div>
+    <div class="wk-lbl ${mobCls}"><div class="wk-ldot" style="background:${mobClr}"></div><span class="mob-show">${mobN}</span><span class="d-hide desk-w1">${n1()}</span></div>
+    <div class="d-hide"></div>
+    <div class="wk-lbl b d-hide"><div class="wk-ldot" style="background:var(--w2)"></div>${n2()}</div>
   </div>
-  <div class="weekday-row"><div></div><div class="weekday-cells">${wdCells}</div><div></div><div class="weekday-cells">${wdCells}</div></div>`;
-  let day=1-firstDay, wn=1;
-  while(day<=daysInMonth){
-    html+=`<div class="cal-week-row"><div class="week-label">W${String(wn).padStart(2,'0')}</div><div class="week-cells">`;
-    for(let c=0;c<7;c++){ html+=buildCell(year,month,day,c,today,0); day++; }
-    html+=`</div><div class="day-divider"></div><div class="week-cells">`;
+  <div class="wd-row"><div></div><div class="wd-cells">${wdc}</div><div class="d-hide"></div><div class="wd-cells d-hide">${wdc}</div></div>`;
+
+  let day=1-fd,wn=1;
+  while(day<=dim){
+    h+=`<div class="wk-row"><div class="wk-num">W${String(wn).padStart(2,'0')}</div><div class="day-cells">`;
+    for(let c=0;c<7;c++){h+=buildDC(year,month,day,c,today,mw);day++;}
+    h+=`</div><div class="col-div d-hide"></div><div class="day-cells d-hide">`;
     const ds=day-7;
-    for(let c=0;c<7;c++){ html+=buildCell(year,month,ds+c,c,today,1); }
-    html+=`</div></div>`;
+    for(let c=0;c<7;c++){h+=buildDC(year,month,ds+c,c,today,1);}
+    h+=`</div></div>`;
     wn++;
   }
-  return html;
+  return h;
 }
 
-function buildCell(year,month,d,col,today,worker){
+function buildDC(year,month,d,col,today,worker){
   const maxD=new Date(year,month+1,0).getDate();
-  const inMonth=d>=1&&d<=maxD;
-  const key=inMonth?dKey(year,month,d):'';
-  const isToday=inMonth&&today.getFullYear()===year&&today.getMonth()===month&&today.getDate()===d;
-  const dayData=inMonth?getDayData(worker,key):null;
-  const isKey=inMonth&&dayData.keyDate;
-  let cls='day-cell';
-  if(!inMonth) cls+=' other-month';
-  if(isToday) cls+=' is-today';
-  if(isKey) cls+=' is-key';
-  const onclick=inMonth?`onclick="openDay(${year},${month},${d})"`:'';
-  let inner=`<div class="day-num"><span>${inMonth?d:''}</span>`;
-  if(isToday) inner+=`<span class="today-dot"></span>`;
-  else if(isKey) inner+=`<span class="key-star">★</span>`;
+  const inM=d>=1&&d<=maxD;
+  const key=inM?dk(year,month,d):'';
+  const isT=inM&&today.getFullYear()===year&&today.getMonth()===month&&today.getDate()===d;
+  const isPast=inM&&new Date(year,month,d)<new Date(today.getFullYear(),today.getMonth(),today.getDate());
+  const dd=inM?gdd(worker,key):null;
+  const isK=inM&&dd.keyDate;
+  let cls='dc';
+  if(!inM)cls+=' om';
+  else if(isPast)cls+=' past';
+  if(isT)cls+=' td';
+  if(isK)cls+=' kd';
+  const oc=(inM&&!isPast)?`onclick="openDay(${year},${month},${d})"`:'';
+  let inner=`<div class="dn"><span>${inM?d:''}</span>`;
+  if(isT)inner+=`<span class="td-dot"></span>`;
+  else if(isK)inner+=`<span class="ks">★</span>`;
   inner+=`</div>`;
-  if(inMonth){
-    dayData.tasks.slice(0,3).forEach(t=>{
-      const p=getProj(t.proj);
-      inner+=`<div class="task-chip" style="background:${p?p.color:'#888'}">${t.text}</div>`;
-    });
-    if(dayData.tasks.length>3) inner+=`<div class="task-more">+${dayData.tasks.length-3}</div>`;
-    if(isKey&&dayData.keyNote) inner+=`<div class="key-note-preview">${dayData.keyNote}</div>`;
+  if(inM){
+    dd.tasks.slice(0,3).forEach(t=>{const p=gp(t.proj);inner+=`<div class="tc" style="background:${p?p.color:'#888'}">${t.text}</div>`;});
+    if(dd.tasks.length>3)inner+=`<div class="tm">+${dd.tasks.length-3}</div>`;
+    if(isK&&dd.keyNote)inner+=`<div class="kn-prev">${dd.keyNote}</div>`;
   }
-  return `<div class="${cls}" ${onclick}>${inner}</div>`;
+  return`<div class="${cls}" ${oc}>${inner}</div>`;
 }
 
-/* ── Modal ── */
-let edit={day:null,dk:'',tasksA:[],tasksB:[],keyDate:false,keyNote:''};
-
-window.openDay=function(year,month,d){
-  const key=dKey(year,month,d);
-  edit.day={year,month,d}; edit.dk=key;
-  const dA=getDayData(0,key), dB=getDayData(1,key);
-  edit.tasksA=JSON.parse(JSON.stringify(dA.tasks));
-  edit.tasksB=JSON.parse(JSON.stringify(dB.tasks));
-  edit.keyDate=dA.keyDate||dB.keyDate;
-  edit.keyNote=dA.keyNote||dB.keyNote||'';
-  const dateObj=new Date(year,month,d);
-  document.getElementById('mDate').textContent=`${year}年${month+1}月${d}日（${WD[dateObj.getDay()]}）`;
-  document.getElementById('mW1Name').textContent=w1name();
-  document.getElementById('mW2Name').textContent=w2name();
-  document.getElementById('keyCheck').checked=edit.keyDate;
-  document.getElementById('keyNote').value=edit.keyNote;
-  document.getElementById('keyNoteWrap').style.display=edit.keyDate?'block':'none';
-  document.getElementById('keyToggle').classList.toggle('active',edit.keyDate);
-  renderProjSelects();
-  renderTaskList(0); renderTaskList(1);
-  renderTagSuggest(0,''); renderTagSuggest(1,'');
-  document.getElementById('overlay').style.display='flex';
-  setTimeout(()=>document.getElementById('newTextA').focus(),50);
-};
-
-function renderTaskList(w){
-  const tasks=w===0?edit.tasksA:edit.tasksB;
-  const el=document.getElementById(w===0?'taskListA':'taskListB');
-  if(!tasks.length){ el.innerHTML=`<div class="empty-hint">尚無工作項目</div>`; return; }
-  el.innerHTML=tasks.map((t,i)=>{
-    const p=getProj(t.proj);
-    return `<div class="task-row">
-      <span class="task-row-dot" style="background:${p?p.color:'#888'}"></span>
-      <span class="task-row-text">${t.text}</span>
-      <span class="task-row-proj">${p?p.name:''}</span>
-      <button class="task-row-del" onclick="removeTask(${w},${i})">✕</button>
-    </div>`;
-  }).join('');
+/* ── Tag history ── */
+function addHist(t){
+  if(!t)return;
+  if(!S.taskHistory)S.taskHistory=[];
+  S.taskHistory=S.taskHistory.filter(x=>x!==t);
+  S.taskHistory.unshift(t);
+  if(S.taskHistory.length>100)S.taskHistory=S.taskHistory.slice(0,100);
 }
-
-function renderTagSuggest(w,query){
-  const el=document.getElementById(w===0?'tagSuggestA':'tagSuggestB');
-  const tags=getTagSuggestions(query);
-  if(!tags.length){ el.innerHTML=''; return; }
-  const chips=tags.map(t=>`<span class="tag-chip" data-w="${w}" data-text="${t.replace(/"/g,'&quot;')}"><span class="tag-chip-text">${t}</span><span class="tag-chip-del" data-text="${t.replace(/"/g,'&quot;')}">×</span></span>`).join('');
-  el.innerHTML=`<div class="tag-section-label">歷史項目快速帶入</div><div class="tag-suggestions">${chips}</div>`;
-  el.querySelectorAll('.tag-chip').forEach(chip=>{
-    chip.addEventListener('click',(e)=>{
-      if(e.target.classList.contains('tag-chip-del')){
-        const text=e.target.dataset.text;
-        state.taskHistory=state.taskHistory.filter(t=>t!==text);
-        schedSave(); filterTags(w); return;
+function getTags(q){
+  const h=S.taskHistory||[];
+  if(!q)return h.slice(0,14);
+  return h.filter(t=>t.toLowerCase().includes(q.toLowerCase())).slice(0,8);
+}
+function renderTags(w,q){
+  const el=document.getElementById(w===0?'tagA':'tagB');
+  const tags=getTags(q);
+  if(!tags.length){el.innerHTML='';return;}
+  const chips=tags.map(t=>`<span class="tag" data-w="${w}" data-t="${t.replace(/"/g,'&quot;')}"><span class="tag-t">${t}</span><span class="tag-x" data-t="${t.replace(/"/g,'&quot;')}">×</span></span>`).join('');
+  el.innerHTML=`<div class="tag-lbl">歷史項目快速帶入</div><div class="tag-wrap">${chips}</div>`;
+  el.querySelectorAll('.tag').forEach(chip=>{
+    chip.addEventListener('click',e=>{
+      if(e.target.classList.contains('tag-x')){
+        S.taskHistory=(S.taskHistory||[]).filter(x=>x!==e.target.dataset.t);
+        sched();renderTags(w,document.getElementById(w===0?'txtA':'txtB').value);return;
       }
-      const worker=parseInt(chip.dataset.w);
-      const inp=document.getElementById(worker===0?'newTextA':'newTextB');
-      inp.value=chip.dataset.text; inp.focus(); filterTags(worker);
+      document.getElementById(w===0?'txtA':'txtB').value=chip.dataset.t;
+      renderTags(w,chip.dataset.t);
+      document.getElementById(w===0?'txtA':'txtB').focus();
     });
   });
 }
+window.filterTag=function(w){renderTags(w,document.getElementById(w===0?'txtA':'txtB').value);};
 
-window.filterTags=function(w){
-  const val=document.getElementById(w===0?'newTextA':'newTextB').value;
-  renderTagSuggest(w,val);
+/* ── Day modal ── */
+window.openDay=function(year,month,d){
+  const key=dk(year,month,d);
+  edit.dk=key;
+  const dA=gdd(0,key),dB=gdd(1,key);
+  edit.tA=JSON.parse(JSON.stringify(dA.tasks));
+  edit.tB=JSON.parse(JSON.stringify(dB.tasks));
+  edit.kd=dA.keyDate||dB.keyDate;
+  edit.kn=dA.keyNote||dB.keyNote||'';
+  const dateObj=new Date(year,month,d);
+  document.getElementById('mdDate').textContent=`${year}年${month+1}月${d}日（${WD[dateObj.getDay()]}）`;
+  document.getElementById('mwA').textContent=n1();
+  document.getElementById('mwB').textContent=n2();
+  document.getElementById('kdChk').checked=edit.kd;
+  document.getElementById('kdNote').value=edit.kn;
+  document.getElementById('kdBox').style.display=edit.kd?'block':'none';
+  document.getElementById('kdTog').classList.toggle('on',edit.kd);
+  renderPJ();
+  renderList(0);renderList(1);
+  renderTags(0,'');renderTags(1,'');
+  document.getElementById('ov').style.display='flex';
+  setTimeout(()=>document.getElementById('txtA').focus(),50);
 };
 
-window.addTask=function(w){
-  const txtId=w===0?'newTextA':'newTextB', projId=w===0?'newProjA':'newProjB';
-  const text=document.getElementById(txtId).value.trim();
-  const proj=document.getElementById(projId).value;
-  if(!text||!proj) return;
-  (w===0?edit.tasksA:edit.tasksB).push({text,proj,id:'t'+Date.now()});
-  addToHistory(text);
-  document.getElementById(txtId).value='';
-  renderTaskList(w); renderTagSuggest(w,'');
+function renderList(w){
+  const tasks=w===0?edit.tA:edit.tB;
+  const el=document.getElementById(w===0?'listA':'listB');
+  if(!tasks.length){el.innerHTML=`<div class="empty">尚無工作項目</div>`;return;}
+  el.innerHTML=tasks.map((t,i)=>{const p=gp(t.proj);return`<div class="tr"><span class="tr-dot" style="background:${p?p.color:'#888'}"></span><span class="tr-txt">${t.text}</span><span class="tr-pj">${p?p.name:''}</span><button class="tr-del" onclick="rmTask(${w},${i})">✕</button></div>`;}).join('');
+}
+window.doAddTask=function(w){
+  const ti=w===0?'txtA':'txtB',pi=w===0?'pjA':'pjB';
+  const text=document.getElementById(ti).value.trim();
+  const proj=document.getElementById(pi).value;
+  if(!text||!proj)return;
+  (w===0?edit.tA:edit.tB).push({text,proj,id:'t'+Date.now()});
+  addHist(text);
+  document.getElementById(ti).value='';
+  renderList(w);renderTags(w,'');
 };
-
-window.removeTask=function(w,i){
-  if(w===0) edit.tasksA.splice(i,1); else edit.tasksB.splice(i,1);
-  renderTaskList(w);
+window.rmTask=function(w,i){
+  if(w===0)edit.tA.splice(i,1);else edit.tB.splice(i,1);
+  renderList(w);
 };
-
-window.toggleKey=function(){
-  edit.keyDate=!edit.keyDate;
-  document.getElementById('keyCheck').checked=edit.keyDate;
-  document.getElementById('keyNoteWrap').style.display=edit.keyDate?'block':'none';
-  document.getElementById('keyToggle').classList.toggle('active',edit.keyDate);
+window.togKd=function(){
+  edit.kd=!edit.kd;
+  document.getElementById('kdChk').checked=edit.kd;
+  document.getElementById('kdBox').style.display=edit.kd?'block':'none';
+  document.getElementById('kdTog').classList.toggle('on',edit.kd);
 };
-
 window.saveDay=function(){
-  const key=edit.dk, note=document.getElementById('keyNote').value;
+  const key=edit.dk,note=document.getElementById('kdNote').value;
   [0,1].forEach(w=>{
-    const tasks=w===0?edit.tasksA:edit.tasksB;
-    state.data[wdk(w,key)]={tasks,keyDate:edit.keyDate,keyNote:note};
+    S.data[wdk(w,key)]={tasks:w===0?edit.tA:edit.tB,keyDate:edit.kd,keyNote:note};
   });
-  closeModal(); renderAllMonths(); schedSave();
+  closeOv();renderCal();sched();
 };
-
-window.closeModal=function(){ document.getElementById('overlay').style.display='none'; };
-window.closeOverlay=function(e){ if(e.target===document.getElementById('overlay')) closeModal(); };
-window.onWorkerNameChange=function(){ renderAllMonths(); schedSave(); };
+window.closeOv=function(){document.getElementById('ov').style.display='none';};
+window.ovClick=function(e){if(e.target===document.getElementById('ov'))closeOv();};
 
 /* ── Export ── */
-window.openExport=function(){
-  const list=document.getElementById('monthCheckList');
-  list.innerHTML=(state.months||[]).map((m,i)=>`
-    <label class="month-check-item checked" id="mci${i}">
-      <input type="checkbox" id="mchk${i}" checked onchange="updateCheckItem(${i})" />
-      <span class="month-check-label">${m.year}年${MN[m.month]}</span>
+window.openExp=function(){
+  document.getElementById('expList').innerHTML=(S.months||[]).map((m,i)=>`
+    <label class="exp-item on" id="ei${i}">
+      <input type="checkbox" id="ec${i}" checked onchange="togEI(${i})"/>
+      <span>${m.year}年${MN[m.month]}</span>
     </label>`).join('');
-  document.getElementById('exportProgress').textContent='';
-  document.getElementById('exportDoBtn').disabled=false;
-  document.getElementById('exportOverlay').style.display='flex';
+  document.getElementById('expProg').textContent='';
+  document.getElementById('expBtn').disabled=false;
+  document.getElementById('expOv').style.display='flex';
 };
-window.updateCheckItem=function(i){
-  const chk=document.getElementById(`mchk${i}`);
-  document.getElementById(`mci${i}`).classList.toggle('checked',chk.checked);
+window.togEI=function(i){document.getElementById(`ei${i}`).classList.toggle('on',document.getElementById(`ec${i}`).checked);};
+window.togAllMo=function(){
+  const all=(S.months||[]).map((_,i)=>document.getElementById(`ec${i}`));
+  const any=all.some(c=>!c.checked);
+  all.forEach((c,i)=>{c.checked=any;togEI(i);});
 };
-window.toggleAllMonths=function(){
-  const all=(state.months||[]).map((_,i)=>document.getElementById(`mchk${i}`));
-  const anyUnchecked=all.some(c=>!c.checked);
-  all.forEach((c,i)=>{ c.checked=anyUnchecked; updateCheckItem(i); });
-};
-window.closeExport=function(){ document.getElementById('exportOverlay').style.display='none'; };
-window.closeExportOverlay=function(e){ if(e.target===document.getElementById('exportOverlay')) closeExport(); };
+window.closeExp=function(){document.getElementById('expOv').style.display='none';};
+window.expOvClick=function(e){if(e.target===document.getElementById('expOv'))closeExp();};
 
 window.doExport=async function(){
-  const selected=(state.months||[]).map((m,i)=>({m,i,checked:document.getElementById(`mchk${i}`).checked})).filter(x=>x.checked);
-  if(!selected.length){ alert('請至少選擇一個月份'); return; }
-  const btn=document.getElementById('exportDoBtn');
-  btn.disabled=true;
-  const prog=document.getElementById('exportProgress');
-  prog.textContent='準備中…';
-  try {
-    const canvases=[];
-    for(let s=0;s<selected.length;s++){
-      const {i}=selected[s];
-      prog.textContent=`截圖中 ${s+1}/${selected.length}…`;
-      const block=document.getElementById(`mb${i}`);
-      if(!block) continue;
-      const c=await html2canvas(block,{backgroundColor:'#F5F3EE',scale:2,useCORS:true,logging:false,scrollX:0,scrollY:0});
-      canvases.push(c);
+  const sel=(S.months||[]).map((m,i)=>({m,i,on:document.getElementById(`ec${i}`).checked})).filter(x=>x.on);
+  if(!sel.length){alert('請至少選擇一個月份');return;}
+  const btn=document.getElementById('expBtn');btn.disabled=true;
+  const prog=document.getElementById('expProg');prog.textContent='準備中…';
+  try{
+    const cvs=[];
+    for(let s=0;s<sel.length;s++){
+      prog.textContent=`截圖中 ${s+1}/${sel.length}…`;
+      const blk=document.getElementById(`mb${sel[s].i}`);
+      if(!blk)continue;
+      const c=await html2canvas(blk,{backgroundColor:'#F5F3EE',scale:2,useCORS:true,logging:false,scrollX:0,scrollY:0});
+      cvs.push(c);
       await new Promise(r=>setTimeout(r,80));
     }
-    if(!canvases.length){ prog.textContent='沒有可匯出的內容'; btn.disabled=false; return; }
+    if(!cvs.length){prog.textContent='無可匯出內容';btn.disabled=false;return;}
     prog.textContent='合併中…';
-    const SCALE=2, PAD=40*SCALE, SIDE_W=220*SCALE, INNER_GAP=24*SCALE;
-    const calW=canvases[0].width;
-    const calH=canvases.reduce((s,c)=>s+c.height,0);
+    const SC=2,PAD=40*SC,SW=220*SC,GAP=24*SC;
     const out=document.createElement('canvas');
-    out.width=PAD+SIDE_W+INNER_GAP+calW+PAD;
-    out.height=PAD+calH+PAD;
+    out.width=PAD+SW+GAP+cvs[0].width+PAD;
+    out.height=PAD+cvs.reduce((s,c)=>s+c.height,0)+PAD;
     const ctx=out.getContext('2d');
-    ctx.fillStyle='#F5F3EE'; ctx.fillRect(0,0,out.width,out.height);
+    ctx.fillStyle='#F5F3EE';ctx.fillRect(0,0,out.width,out.height);
     let cy=PAD;
-    for(const c of canvases){ ctx.drawImage(c,PAD+SIDE_W+INNER_GAP,cy); cy+=c.height; }
-    const sx=PAD, sw=SIDE_W;
-    const W1C='#2B5BA8',W1L='#EBF0FA',W2C='#1B7A52',W2L='#E6F5EE';
-    const fB=11*SCALE, fS=9*SCALE;
+    for(const c of cvs){ctx.drawImage(c,PAD+SW+GAP,cy);cy+=c.height;}
+    // Legend
+    const sx=PAD,fB=11*SC,fS=9*SC;
     let ly=PAD;
-    function rr(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r); ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h); ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r); ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath(); }
-    ctx.font=`700 ${fS}px "Noto Sans TC",sans-serif`; ctx.fillStyle='#9E988E'; ctx.fillText('專案圖例',sx,ly+fS); ly+=fS+10*SCALE;
-    rr(sx,ly,sw,28*SCALE,5*SCALE); ctx.fillStyle=W1L; ctx.fill(); ctx.strokeStyle='#7FA3D8'; ctx.lineWidth=1.5; ctx.stroke();
-    ctx.beginPath(); ctx.arc(sx+12*SCALE,ly+14*SCALE,5*SCALE,0,Math.PI*2); ctx.fillStyle=W1C; ctx.fill();
-    ctx.font=`700 ${fB}px "Noto Sans TC",sans-serif`; ctx.fillStyle=W1C; ctx.fillText(w1name(),sx+22*SCALE,ly+14*SCALE+fB*0.35); ly+=36*SCALE;
-    rr(sx,ly,sw,28*SCALE,5*SCALE); ctx.fillStyle=W2L; ctx.fill(); ctx.strokeStyle='#6BB894'; ctx.lineWidth=1.5; ctx.stroke();
-    ctx.beginPath(); ctx.arc(sx+12*SCALE,ly+14*SCALE,5*SCALE,0,Math.PI*2); ctx.fillStyle=W2C; ctx.fill();
-    ctx.font=`700 ${fB}px "Noto Sans TC",sans-serif`; ctx.fillStyle=W2C; ctx.fillText(w2name(),sx+22*SCALE,ly+14*SCALE+fB*0.35); ly+=36*SCALE+12*SCALE;
-    ctx.strokeStyle='#D8D4CC'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(sx,ly); ctx.lineTo(sx+sw,ly); ctx.stroke(); ly+=14*SCALE;
-    ctx.font=`700 ${fS}px "Noto Sans TC",sans-serif`; ctx.fillStyle='#9E988E'; ctx.fillText('工作項目顏色',sx,ly+fS); ly+=fS+10*SCALE;
-    for(const p of (state.projects||[])){
-      ctx.beginPath(); ctx.arc(sx+6*SCALE,ly+10*SCALE,6*SCALE,0,Math.PI*2); ctx.fillStyle=p.color; ctx.fill();
-      ctx.font=`400 ${fB}px "Noto Sans TC",sans-serif`; ctx.fillStyle='#1A1816'; ctx.fillText(p.name,sx+18*SCALE,ly+10*SCALE+fB*0.35); ly+=24*SCALE;
+    function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+    ctx.font=`700 ${fS}px "Noto Sans TC",sans-serif`;ctx.fillStyle='#9E988E';ctx.fillText('專案圖例',sx,ly+fS);ly+=fS+10*SC;
+    [[n1(),'#2B5BA8','#EBF0FA','#7FA3D8'],[n2(),'#1B7A52','#E6F5EE','#6BB894']].forEach(([name,c,bg,bd])=>{
+      rr(sx,ly,SW,28*SC,5*SC);ctx.fillStyle=bg;ctx.fill();ctx.strokeStyle=bd;ctx.lineWidth=1.5;ctx.stroke();
+      ctx.beginPath();ctx.arc(sx+12*SC,ly+14*SC,5*SC,0,Math.PI*2);ctx.fillStyle=c;ctx.fill();
+      ctx.font=`700 ${fB}px "Noto Sans TC",sans-serif`;ctx.fillStyle=c;ctx.fillText(name,sx+22*SC,ly+14*SC+fB*0.35);
+      ly+=36*SC;
+    });
+    ly+=12*SC;
+    ctx.strokeStyle='#D8D4CC';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(sx,ly);ctx.lineTo(sx+SW,ly);ctx.stroke();ly+=14*SC;
+    ctx.font=`700 ${fS}px "Noto Sans TC",sans-serif`;ctx.fillStyle='#9E988E';ctx.fillText('工作項目顏色',sx,ly+fS);ly+=fS+10*SC;
+    for(const p of(S.projects||[])){
+      ctx.beginPath();ctx.arc(sx+6*SC,ly+10*SC,6*SC,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill();
+      ctx.font=`400 ${fB}px "Noto Sans TC",sans-serif`;ctx.fillStyle='#1A1816';ctx.fillText(p.name,sx+18*SC,ly+10*SC+fB*0.35);ly+=24*SC;
     }
-    ly+=10*SCALE;
-    ctx.strokeStyle='#D8D4CC'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(sx,ly); ctx.lineTo(sx+sw,ly); ctx.stroke(); ly+=14*SCALE;
-    rr(sx,ly,sw,22*SCALE,4*SCALE); ctx.fillStyle='#FFF3CD'; ctx.fill(); ctx.strokeStyle='#E8C840'; ctx.lineWidth=1; ctx.stroke();
-    ctx.font=`400 ${fS}px "Noto Sans TC",sans-serif`; ctx.fillStyle='#7A5800'; ctx.fillText('★ 重點日期',sx+8*SCALE,ly+11*SCALE+fS*0.35);
-    const label=selected.length===1?`排程_${selected[0].m.year}年${MN[selected[0].m.month]}`:`排程_${selected[0].m.year}年${MN[selected[0].m.month]}_至_${selected[selected.length-1].m.year}年${MN[selected[selected.length-1].m.month]}`;
-    const link=document.createElement('a'); link.download=`${label}.jpg`; link.href=out.toDataURL('image/jpeg',0.93); link.click();
-    prog.textContent=`完成！已匯出 ${selected.length} 個月份`;
-  } catch(err){ console.error(err); prog.textContent='匯出失敗，請再試一次'; }
+    ly+=10*SC;
+    ctx.strokeStyle='#D8D4CC';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(sx,ly);ctx.lineTo(sx+SW,ly);ctx.stroke();ly+=14*SC;
+    rr(sx,ly,SW,22*SC,4*SC);ctx.fillStyle='#FFF3CD';ctx.fill();ctx.strokeStyle='#E8C840';ctx.lineWidth=1;ctx.stroke();
+    ctx.font=`400 ${fS}px "Noto Sans TC",sans-serif`;ctx.fillStyle='#7A5800';ctx.fillText('★ 重點日期',sx+8*SC,ly+11*SC+fS*0.35);
+    const lbl=sel.length===1?`排程_${sel[0].m.year}年${MN[sel[0].m.month]}`:`排程_${sel[0].m.year}年${MN[sel[0].m.month]}_至_${sel[sel.length-1].m.year}年${MN[sel[sel.length-1].m.month]}`;
+    const a=document.createElement('a');a.download=`${lbl}.jpg`;a.href=out.toDataURL('image/jpeg',0.93);a.click();
+    prog.textContent=`完成！已匯出 ${sel.length} 個月份`;
+  }catch(err){console.error(err);prog.textContent='匯出失敗，請再試一次';}
   btn.disabled=false;
 };
 
+/* ── Migration ── */
+function checkMig(){
+  const raw=localStorage.getItem(LS);if(!raw)return;
+  try{
+    const p=JSON.parse(raw);
+    if(!p.data||!Object.keys(p.data).length)return;
+    document.getElementById('migwrap').innerHTML=`<div class="mig-banner"><div class="mig-txt"><strong>偵測到本機資料</strong>你的瀏覽器有舊的排程資料，是否上傳到雲端？</div><button class="mig-btn" onclick="doMig()">上傳本機資料</button><button class="mig-x" onclick="document.getElementById('migwrap').innerHTML=''">✕</button></div>`;
+  }catch(e){}
+}
+window.doMig=async function(){
+  const raw=localStorage.getItem(LS);if(!raw)return;
+  try{
+    const p=JSON.parse(raw);S={...S,...p};
+    await push();apply();localStorage.removeItem(LS);
+    document.getElementById('migwrap').innerHTML='';
+    alert('上傳完成！');
+  }catch(e){alert('上傳失敗，請再試一次');}
+};
+
 /* ── Init ── */
-(async function(){
-  try {
-    const snap=await getDoc(DOC_REF);
-    if(snap.exists()){
-      state=snap.data();
-    }
-    applyState();
-    setSyncStatus('ok');
-  } catch(e){
-    console.error(e);
-    setSyncStatus('error');
-    // fallback: render with default state
-    applyState();
-  }
-  document.getElementById('loadingScreen').style.display='none';
-  document.getElementById('appWrap').style.display='block';
-  checkMigration();
+(async()=>{
+  try{
+    const snap=await getDoc(REF);
+    if(snap.exists())S=snap.data();
+    apply();ss('ok');
+  }catch(e){console.error(e);ss('e');apply();}
+  document.getElementById('loading').style.display='none';
+  document.getElementById('app').style.display='block';
+  checkMig();
 })();
 </script>
 </body>
